@@ -1,5 +1,5 @@
 import express from 'express';
-import {createPlayer,getAllPlayers,updateMonthlyPayment,loginAdmin,logoutCurrentUser,updatePlayer
+import {createPlayer,getAllPlayers,loginAdmin,logoutCurrentUser,deletePlayerById,updatePlayerById,getPlayerById,
 } from '../controllers/playerController.js';
 
 import { authenticate } from "../middlewares/authMiddleware.js";
@@ -13,8 +13,9 @@ router.route('/players')
   .post(authenticate, createPlayer)     
   .get(authenticate, getAllPlayers);     
 
-router.put('/players/:playerId/payment', authenticate, updateMonthlyPayment);
-
-router.put('/players/:id', authenticate, updatePlayer);
+router.route('/:id')
+  .delete(authenticate, deletePlayerById)
+  .get(authenticate, getPlayerById)
+  .put(authenticate, updatePlayerById);
 
 export default router;

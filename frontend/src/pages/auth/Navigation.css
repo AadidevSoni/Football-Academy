@@ -8,7 +8,7 @@
   --text-color: white;
   --nav-width-collapsed: 6%;
   --nav-width-expanded: 12%;
-  --font-family: 'Poppins', sans-serif;
+  --font-family: 'Poppins', sans-serif; 
 }
 
 .navigation-container {
@@ -169,5 +169,9 @@
   text-align: left;
   font-family: var(--font-family);
   width: 100%;
+  margin-bottom: 2rem;
 }
 
+.listButton:hover {
+  cursor: pointer;
+}

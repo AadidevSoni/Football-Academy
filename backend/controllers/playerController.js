@@ -67,20 +67,9 @@ export const getAllPlayers = asyncHandler(async (req, res) => {
   res.json(players);
 });
 
-export const updateMonthlyPayment = asyncHandler(async (req, res) => {
-  const { month, status } = req.body;
-  const player = await Player.findOne({ playerId: req.params.playerId }); 
-  if (!player) {
-    res.status(404);
-    throw new Error('Player not found');
-  }
-  player.paymentStatus[month] = status;
-  await player.save();
-  res.json(player);
-});
+// controllers/playerController.js
 
-export const updatePlayer = asyncHandler(async (req, res) => {
-  const { name, email, phone, fees } = req.body;
+export const updatePlayerById = asyncHandler(async (req, res) => {
   const player = await Player.findById(req.params.id);
 
   if (!player) {
@@ -88,12 +77,55 @@ export const updatePlayer = asyncHandler(async (req, res) => {
     throw new Error('Player not found');
   }
 
+  const { playerId, name, email, phone, fees, paymentStatus } = req.body;
+
+  // ✅ Update playerId (if not conflicting with existing ones)
+  if (playerId && playerId !== player.playerId) {
+    const existing = await Player.findOne({ playerId });
+    if (existing && existing._id.toString() !== player._id.toString()) {
+      res.status(400);
+      throw new Error('Player ID already exists');
+    }
+    player.playerId = playerId;
+  }
+
   player.name = name || player.name;
   player.email = email || player.email;
   player.phone = phone || player.phone;
-  player.fees = fees !== undefined ? fees : player.fees;
+  player.fees = fees || player.fees;
 
-  const updated = await player.save();
-  res.json(updated);
+  if (paymentStatus && typeof paymentStatus === 'object') {
+    const months = Object.keys(player.paymentStatus);
+    months.forEach(month => {
+      if (paymentStatus.hasOwnProperty(month)) {
+        player.paymentStatus[month] = paymentStatus[month];
+      }
+    });
+  }
+
+  const updatedPlayer = await player.save();
+  res.json(updatedPlayer);
 });
 
+export const deletePlayerById = asyncHandler(async (req, res) => {
+  const player = await Player.findById(req.params.id);
+
+  if (!player) {
+    res.status(404);
+    throw new Error('Player not found');
+  }
+
+  await player.deleteOne();
+  res.status(200).json({ message: 'Player deleted successfully' });
+});
+
+export const getPlayerById = asyncHandler(async (req, res) => {
+  const player = await Player.findById(req.params.id);
+
+  if (!player) {
+    res.status(404);
+    throw new Error('Player not found');
+  }
+
+  res.status(200).json(player);
+});

@@ -19,9 +19,9 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
 
       <Route path ='' element = {<PrivateRoute />}>
-        <Route path="players" element={<PlayerList />} />
-        <Route path="players/add" element={<AddPlayer />} />
-        <Route path="players/:id/edit" element={<EditPlayer />} />
+        <Route path="playerList" element={<PlayerList />} />
+        <Route path="addPlayer" element={<AddPlayer />} />
+        <Route path=":id/edit" element={<EditPlayer />} />
       </Route>
       
       <Route index element={<Home />} />
