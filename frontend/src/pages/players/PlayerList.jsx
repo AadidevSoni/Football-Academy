@@ -191,7 +191,7 @@ const PlayerList = () => {
                       className={player.paymentStatus[month] ? 'paid' : 'unpaid'}
                       style={{ textAlign: 'center' }}
                     >
-                      {player.paymentStatus[month] ? '✔️' : '❌'}
+                      {player.paymentStatus[month] ? '✅' : '❌'}
                     </td>
                   ))}
                   <td>
