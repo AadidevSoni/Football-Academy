@@ -16,7 +16,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Update CORS origin to your frontend deployed URL or allow multiple origins
 app.use(cors({
   origin: [ 'http://localhost:5174', process.env.FRONTEND_URL ], // add your Netlify/Vercel domain here
   credentials: true,
