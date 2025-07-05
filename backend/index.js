@@ -8,19 +8,18 @@ import bcrypt from 'bcryptjs';
 import cors from 'cors';
 
 dotenv.config();
-const port = process.env.PORT || 7001;
-
-connectDB();
 
 const app = express();
+const port = process.env.PORT || 7001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Update CORS origin to your frontend deployed URL or allow multiple origins
 app.use(cors({
-  origin: 'http://localhost:5174', 
-  credentials: true,                
+  origin: [ 'http://localhost:5174', process.env.FRONTEND_URL ], // add your Netlify/Vercel domain here
+  credentials: true,
 }));
 
 app.use('/api/admin', adminRoutes);
@@ -34,15 +33,29 @@ const createDefaultAdmin = async () => {
         username: process.env.ADMIN_USERNAME,
         password: hashedPassword,
       });
-      console.log('Default admin created');
+      console.log('✅ Default admin created');
     } else {
-      console.log('Admin already exists');
+      console.log('⚠️ Admin already exists');
     }
   } catch (error) {
-    console.error('Failed to create admin:', error.message);
+    console.error('❌ Failed to create admin:', error.message);
   }
 };
 
-createDefaultAdmin(); 
+const startServer = async () => {
+  try {
+    await connectDB(); // wait for DB connection first
+    console.log('MongoDB connected');
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+    await createDefaultAdmin(); // create admin only after DB is ready
+
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
