@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'https://groacademy.netlify.app', // your Netlify frontend URL here
+  origin: 'https://groacademy.netlify.app',
   credentials: true,
 }));
 
