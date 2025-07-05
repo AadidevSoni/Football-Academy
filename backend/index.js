@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'http://localhost:5174', 
+  origin: https://gro-academy-backend.onrender.com, 
   credentials: true,                
 }));
 
