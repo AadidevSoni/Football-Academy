@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: [ 'http://localhost:5174', process.env.FRONTEND_URL ], // add your Netlify/Vercel domain here
+  origin: 'https://groacademy.netlify.app', // your Netlify frontend URL here
   credentials: true,
 }));
 
