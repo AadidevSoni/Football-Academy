@@ -1,9 +1,37 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { RouterProvider, createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+import store from '../src/pages/redux/store.js'
+
+import App from './App';
+import Login from './pages/auth/Login';
+import PlayerList from './pages/players/PlayerList';
+import AddPlayer from './pages/players/AddPlayer';
+import EditPlayer from './pages/players/EditPlayer';
+import Home from './pages/auth/Home';
+
+import PrivateRoute from './components/PrivateRoute.jsx';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+
+      <Route path ='' element = {<PrivateRoute />}>
+        <Route path="players" element={<PlayerList />} />
+        <Route path="players/add" element={<AddPlayer />} />
+        <Route path="players/:id/edit" element={<EditPlayer />} />
+      </Route>
+      
+      <Route index element={<Home />} />
+      <Route path="auth" element={<Login />} />
+    </Route>
+  )
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
+);

@@ -4,10 +4,11 @@ import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import adminRoutes from './routes/adminRoutes.js'; 
 import Admin from './models/adminModel.js';         
-import bcrypt from 'bcryptjs';                     
+import bcrypt from 'bcryptjs';             
+import cors from 'cors';
 
 dotenv.config();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 7001;
 
 connectDB();
 
@@ -17,15 +18,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/admin', adminRoutes);
+app.use(cors({
+  origin: 'http://localhost:5174', 
+  credentials: true,                
+}));
+
+app.use('/api/admin', adminRoutes);
 
 const createDefaultAdmin = async () => {
   try {
-    const exists = await Admin.findOne({ username: 'admin' });
+    const exists = await Admin.findOne({ username: process.env.ADMIN_USERNAME });
     if (!exists) {
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASS, 10); 
       await Admin.create({
-        username: 'admin',
+        username: process.env.ADMIN_USERNAME,
         password: hashedPassword,
       });
       console.log('Default admin created');
@@ -37,7 +43,6 @@ const createDefaultAdmin = async () => {
   }
 };
 
-createDefaultAdmin(); //Run on server startup
+createDefaultAdmin(); 
 
-// Start the server
 app.listen(port, () => console.log(`Server running on port ${port}`));

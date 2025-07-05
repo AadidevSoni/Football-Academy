@@ -1,25 +1,20 @@
 import express from 'express';
-import {
-  createPlayer,
-  getAllPlayers,
-  updateMonthlyPayment,
-  loginAdmin,
-  logoutCurrentUser,
+import {createPlayer,getAllPlayers,updateMonthlyPayment,loginAdmin,logoutCurrentUser,updatePlayer
 } from '../controllers/playerController.js';
 
 import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Admin login/logout
-router.post('/login', loginAdmin);
+router.post('/auth', loginAdmin);
 router.post('/logout', logoutCurrentUser);
 
-// Admin-protected routes
 router.route('/players')
-  .post(authenticate, createPlayer)      // Add player
-  .get(authenticate, getAllPlayers);     // View all players
+  .post(authenticate, createPlayer)     
+  .get(authenticate, getAllPlayers);     
 
 router.put('/players/:playerId/payment', authenticate, updateMonthlyPayment);
+
+router.put('/players/:id', authenticate, updatePlayer);
 
 export default router;
